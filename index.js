@@ -51,13 +51,13 @@ const centerY = (pageHeight - totalTextHeight) / 2;
 
 firstPage.drawText(name, {
   x: centerX,
-  y: 280,
+  y: 330,
   size: textSize,
 });
 
   firstPage.drawText(id, {
-    x: 330, 
-    y: 245,
+    x: centerX, 
+    y: 290,
     size: 15,
   });
 
