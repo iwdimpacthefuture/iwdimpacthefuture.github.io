@@ -1,6 +1,5 @@
 const userName = document.getElementById("name");
 const userN = document.getElementById("id");
-const CertificateID = document.getElementById("IdC");
 const submitBtn = document.getElementById("submitBtn");
 const { PDFDocument, rgb, degrees } = PDFLib;
 
@@ -12,8 +11,7 @@ const capitalize = (str, lower = false) =>
 submitBtn.addEventListener("click", () => {
   const nameVal = capitalize(userName.value);
   const idVal = capitalize(userN.value);
-  const currentTime = new Date().toLocaleString();
-
+  
   if (nameVal.trim() !== "" && idVal.trim() !== "" && userName.checkValidity() && userN.checkValidity()) {
     generatePDF(nameVal, idVal);
   } else {
@@ -22,8 +20,7 @@ submitBtn.addEventListener("click", () => {
   }
 });
 
-const generatePDF = async (name, id, currentTime) => {
-  const fileName = `${name.replace(/\s/g, " ")}.pdf`;
+const generatePDF = async (name, id) => {
   const existingPdfBytes = await fetch("./Certificado.pdf").then((res) =>
     res.arrayBuffer()
   );
@@ -64,50 +61,12 @@ firstPage.drawText(name, {
     size: 20,
   });
 
-  firstPage.drawText(currentTime, {
-    x: 48,
-    y: 90,
-    size: 10,
-  });
-
-  const qrCodeData = `Certificado de:${name}\nCon número de CC: ${id}\nFecha: ${currentTime}\n${IdC}\n`;
-  const qrCode = await generateQR(qrCodeData);
-
-  const qrCodeImage = await pdfDoc.embedPng(qrCode);
-  const qrCodeWidth = 80;
-  const qrCodeHeight = 80;
-
-  firstPage.drawImage(qrCodeImage, {
-    x: 48,
-    y: 105,
-    width: qrCodeWidth,
-    height: qrCodeHeight,
-  });
-
   const pdfBytes = await pdfDoc.save();
-
   console.log("Certificado Creado");
-  var file = new File([pdfBytes], fileName, {
-    type: "application/pdf;charset=utf-8",
-  });
-
+  var file = new File(
+    [pdfBytes], "IWD WTMBogota", {
+      type: "application/pdf;charset=utf-8",
+    }
+  );
   saveAs(file);
 };
-
-const generateQR = async (data) => {
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(data)}`;
-  const qrCodeResponse = await fetch(qrCodeUrl);
-  const qrCodeBlob = await qrCodeResponse.blob();
-  return new Uint8Array(await qrCodeBlob.arrayBuffer());
-};
-const generateUniqueIdC = () => {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-  const idLength = 20;
-  let id = "ID único del certificado: ";
-  for (let i = 0; i < idLength; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    id += characters[randomIndex];
-  }
-  return id;
-};
-
