@@ -51,14 +51,14 @@ const centerY = (pageHeight - totalTextHeight) / 2;
 
 firstPage.drawText(name, {
   x: centerX,
-  y: 330,
+  y: 350,
   size: textSize,
 });
 
   firstPage.drawText(id, {
-    x: centerX, 
+    x: 400, 
     y: 290,
-    size: 15,
+    size: 20,
   });
 
   const pdfBytes = await pdfDoc.save();
